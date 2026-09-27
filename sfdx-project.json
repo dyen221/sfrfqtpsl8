@@ -5,7 +5,7 @@
       "default": true
     }
   ],
-  "name": "sf-rfq-tp-sl8",
+  "name": "salesforce-order-management",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "67.0"
