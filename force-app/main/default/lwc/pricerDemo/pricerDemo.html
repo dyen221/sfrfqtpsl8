@@ -11,111 +11,424 @@
             </h2>
 
             <p class="slds-m-top_small slds-text-color_weak">
-                Generate a target price for the selected product and customer.
+                Generate target pricing for Salesforce quote lines.
             </p>
 
-            <!-- Account -->
 
-            <div class="slds-m-top_medium">
-
-                <lightning-input
-                    name="accountName"
-                    label="Account"
-                    value={accountName}
-                    onchange={handleInputChange}>
-                </lightning-input>
-
-            </div>
-
-            <!-- Product -->
-
-            <div class="slds-m-top_small">
-
-                <lightning-input
-                    name="productCode"
-                    label="Product Code"
-                    value={productCode}
-                    onchange={handleInputChange}>
-                </lightning-input>
-
-            </div>
-
-            <!-- Quantity -->
-
-            <div class="slds-m-top_small">
-
-                <lightning-input
-                    name="quantity"
-                    type="number"
-                    label="Quantity"
-                    value={quantity}
-                    min="1"
-                    onchange={handleInputChange}>
-                </lightning-input>
-
-            </div>
-
-            <!-- Region -->
-
-            <div class="slds-m-top_small">
-
-                <lightning-combobox
-                    name="region"
-                    label="Region"
-                    value={region}
-                    options={regionOptions}
-                    onchange={handleInputChange}>
-                </lightning-combobox>
-
-            </div>
-
-            <!-- Modality -->
-
-            <div class="slds-m-top_small">
-
-                <lightning-combobox
-                    name="modality"
-                    label="Modality"
-                    value={modality}
-                    options={modalityOptions}
-                    onchange={handleInputChange}>
-                </lightning-combobox>
-
-            </div>
-
-            <!-- Generate -->
+            <!-- MODE SELECTION -->
 
             <div class="slds-m-top_large">
 
-                <lightning-button
-                    label="Generate Target Price"
-                    variant="brand"
-                    onclick={handleGenerate}
-                    disabled={isLoading}>
-                </lightning-button>
+                <lightning-button-group>
+
+                    <lightning-button
+                        label="Single Line Item"
+                        variant={singleButtonVariant}
+                        onclick={handleSingleMode}>
+                    </lightning-button>
+
+                    <lightning-button
+                        label="Batch Pricing"
+                        variant={batchButtonVariant}
+                        onclick={handleBatchMode}>
+                    </lightning-button>
+
+                </lightning-button-group>
 
             </div>
 
-            <!-- Loading -->
 
-            <template if:true={isLoading}>
+            <!-- SINGLE LINE MODE -->
+
+            <template if:true={isSingleMode}>
+
+                <div class="slds-m-top_large">
+
+                    <div class="slds-box">
+
+                        <h2 class="slds-text-heading_medium">
+                            Single Line Item Pricing
+                        </h2>
+
+                        <p class="slds-m-top_x-small slds-text-color_weak">
+                            Generate target pricing for one quote line.
+                        </p>
+
+
+                        <!-- ACCOUNT -->
+
+                        <div class="slds-m-top_medium">
+
+                            <lightning-input
+                                name="accountName"
+                                label="Account"
+                                value={accountName}
+                                onchange={handleInputChange}>
+                            </lightning-input>
+
+                        </div>
+
+
+                        <!-- PRODUCT -->
+
+                        <div class="slds-m-top_small">
+
+                            <lightning-input
+                                name="productCode"
+                                label="Product Code"
+                                value={productCode}
+                                onchange={handleInputChange}>
+                            </lightning-input>
+
+                        </div>
+
+
+                        <!-- QUANTITY -->
+
+                        <div class="slds-m-top_small">
+
+                            <lightning-input
+                                name="quantity"
+                                type="number"
+                                label="Quantity"
+                                value={quantity}
+                                min="1"
+                                onchange={handleInputChange}>
+                            </lightning-input>
+
+                        </div>
+
+
+                        <!-- LIST PRICE -->
+
+                        <div class="slds-m-top_small">
+
+                            <lightning-input
+                                name="listPrice"
+                                type="number"
+                                label="List Price"
+                                value={listPrice}
+                                min="0"
+                                step="0.01"
+                                onchange={handleInputChange}>
+                            </lightning-input>
+
+                        </div>
+
+
+                        <!-- REGION -->
+
+                        <div class="slds-m-top_small">
+
+                            <lightning-combobox
+                                name="region"
+                                label="Region"
+                                value={region}
+                                options={regionOptions}
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+
+                        </div>
+
+
+                        <!-- MODALITY -->
+
+                        <div class="slds-m-top_small">
+
+                            <lightning-combobox
+                                name="modality"
+                                label="Modality"
+                                value={modality}
+                                options={modalityOptions}
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+
+                        </div>
+
+
+                        <!-- GENERATE -->
+
+                        <div class="slds-m-top_large">
+
+                            <lightning-button
+                                label="Generate Target Price"
+                                variant="brand"
+                                onclick={handleGenerate}
+                                disabled={isLoading}>
+                            </lightning-button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- BATCH MODE -->
+
+           <template if:true={isBatchMode}>
+
+    <div class="slds-m-top_large">
+
+        <div class="slds-box">
+
+            <h2 class="slds-text-heading_medium">
+                Batch Target Pricing
+            </h2>
+
+            <p class="slds-m-top_x-small slds-text-color_weak">
+                Select a Salesforce Quote and automatically load its Quote Lines.
+            </p>
+
+
+            <!-- QUOTE -->
+
+            <div class="slds-m-top_large">
+
+                <lightning-combobox
+                    name="selectedQuote"
+                    label="Salesforce Quote"
+                    placeholder="Select a Quote"
+                    value={selectedQuoteId}
+                    options={quoteOptions}
+                    onchange={handleQuoteChange}>
+                </lightning-combobox>
+
+            </div>
+
+
+            <!-- QUOTE LOADING -->
+
+            <template if:true={isLoadingQuotes}>
 
                 <div class="slds-m-top_medium">
 
                     <lightning-spinner
-                        alternative-text="Generating target price"
+                        alternative-text="Loading quotes"
                         size="small">
                     </lightning-spinner>
 
                     <p>
-                        Generating target price...
+                        Loading Salesforce Quotes...
                     </p>
 
                 </div>
 
             </template>
 
-            <!-- Result -->
+
+            <!-- QUOTE LINES LOADING -->
+
+            <template if:true={isLoadingQuoteLines}>
+
+                <div class="slds-m-top_medium">
+
+                    <lightning-spinner
+                        alternative-text="Loading quote lines"
+                        size="small">
+                    </lightning-spinner>
+
+                    <p>
+                        Loading Quote Lines...
+                    </p>
+
+                </div>
+
+            </template>
+
+
+            <!-- QUOTE LINES -->
+
+            <template if:true={quoteLines.length}>
+
+                <div class="slds-m-top_large">
+
+                    <h3 class="slds-text-heading_small">
+                        Quote Lines
+                    </h3>
+
+
+                    <div class="slds-scrollable_x slds-m-top_medium">
+
+                        <table
+                            class="slds-table slds-table_cell-buffer slds-table_bordered">
+
+                            <thead>
+
+                                <tr class="slds-line-height_reset">
+
+                                    <th scope="col">
+                                        Select
+                                    </th>
+
+                                    <th scope="col">
+                                        Product
+                                    </th>
+
+                                    <th scope="col">
+                                        Product Code
+                                    </th>
+
+                                    <th scope="col">
+                                        Quantity
+                                    </th>
+
+                                    <th scope="col">
+                                        List Price
+                                    </th>
+
+                                    <th scope="col">
+                                        Target Price
+                                    </th>
+
+                                    <th scope="col">
+                                        Confidence
+                                    </th>
+
+                                    <th scope="col">
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <template
+                                    for:each={quoteLines}
+                                    for:item="line">
+
+                                    <tr key={line.Id}>
+
+                                        <td>
+                                            <lightning-input
+                                                type="checkbox"
+                                                variant="label-hidden"
+                                                data-id={line.Id}
+                                                onchange={handleRowSelection}>
+                                            </lightning-input>
+                                        </td>
+
+                                        <td>
+                                            {line.SBQQ__Product__r.Name}
+                                        </td>
+
+                                        <td>
+                                            {line.SBQQ__Product__r.ProductCode}
+                                        </td>
+
+                                        <td>
+                                            {line.SBQQ__Quantity__c}
+                                        </td>
+
+                                        <td>
+                                            ${line.SBQQ__ListPrice__c}
+                                        </td>
+
+                                        <td>
+                                            {line.Target_Price__c}
+                                        </td>
+
+                                        <td>
+                                            {line.TP_Confidence__c}%
+                                        </td>
+
+                                        <td>
+                                            {line.TP_Status__c}
+                                        </td>
+
+                                    </tr>
+
+                                </template>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- GENERATE BATCH -->
+
+                    <div class="slds-m-top_large">
+
+                        <lightning-button
+                            label="Generate Batch Pricing"
+                            variant="brand"
+                            onclick={handleBatchGenerate}>
+                        </lightning-button>
+
+                    </div>
+
+                    <div class="slds-m-top_medium">
+
+                        <lightning-button
+                            label="Approve Selected"
+                            variant="brand"
+                            onclick={handleApproveSelected}>
+                        </lightning-button>
+
+                        <lightning-button
+                            label="Reject Selected"
+                            variant="destructive"
+                            class="slds-m-left_small"
+                            onclick={handleRejectSelected}>
+                        </lightning-button>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+
+            <!-- NO LINES -->
+
+            <template if:true={selectedQuoteId}>
+
+                <template if:false={quoteLines.length}>
+
+                    <template if:false={isLoadingQuoteLines}>
+
+                        <div class="slds-m-top_large">
+
+                            <p class="slds-text-color_weak">
+                                No Quote Lines found for this Quote.
+                            </p>
+
+                        </div>
+
+                    </template>
+
+                </template>
+
+            </template>
+
+
+            <!-- MESSAGE -->
+
+            <template if:true={message}>
+
+                <div class="slds-m-top_medium">
+
+                    {message}
+
+                </div>
+
+            </template>
+
+        </div>
+
+    </div>
+
+</template>
+
+
+            <!-- SINGLE RESULT -->
 
             <template if:true={targetPrice}>
 
@@ -140,6 +453,11 @@
                         <p class="slds-m-top_small">
                             <strong>Quantity:</strong>
                             {quantity}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>List Price:</strong>
+                            ${listPrice}
                         </p>
 
                         <p class="slds-m-top_small">
@@ -172,23 +490,26 @@
                             {message}
                         </p>
 
+                        <template if:true={isSingleGenerated}>
+                            <div class="slds-m-top_medium">
+                                <lightning-button
+                                    label="Approve"
+                                    variant="brand"
+                                    onclick={handleSingleApprove}
+                                    class="slds-m-right_small">
+                                </lightning-button>
+
+                                <lightning-button
+                                    label="Reject"
+                                    variant="destructive"
+                                    onclick={handleSingleReject}>
+                                </lightning-button>
+                            </div>
+                        </template>
+
                     </div>
 
                 </div>
-
-            </template>
-
-            <!-- Error -->
-
-            <template if:true={message}>
-
-                <template if:false={targetPrice}>
-
-                    <div class="slds-m-top_medium slds-text-color_error">
-                        {message}
-                    </div>
-
-                </template>
 
             </template>
 
