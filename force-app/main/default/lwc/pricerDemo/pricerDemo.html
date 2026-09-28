@@ -1,4 +1,5 @@
 <template>
+
     <lightning-card
         title="Target Pricing System"
         icon-name="standard:product">
@@ -9,50 +10,190 @@
                 Target Pricing
             </h2>
 
-            <p class="slds-m-top_small">
-                Generate a target price using Salesforce Apex.
+            <p class="slds-m-top_small slds-text-color_weak">
+                Generate a target price for the selected product and customer.
             </p>
 
+            <!-- Account -->
+
             <div class="slds-m-top_medium">
+
+                <lightning-input
+                    name="accountName"
+                    label="Account"
+                    value={accountName}
+                    onchange={handleInputChange}>
+                </lightning-input>
+
+            </div>
+
+            <!-- Product -->
+
+            <div class="slds-m-top_small">
+
+                <lightning-input
+                    name="productCode"
+                    label="Product Code"
+                    value={productCode}
+                    onchange={handleInputChange}>
+                </lightning-input>
+
+            </div>
+
+            <!-- Quantity -->
+
+            <div class="slds-m-top_small">
+
+                <lightning-input
+                    name="quantity"
+                    type="number"
+                    label="Quantity"
+                    value={quantity}
+                    min="1"
+                    onchange={handleInputChange}>
+                </lightning-input>
+
+            </div>
+
+            <!-- Region -->
+
+            <div class="slds-m-top_small">
+
+                <lightning-combobox
+                    name="region"
+                    label="Region"
+                    value={region}
+                    options={regionOptions}
+                    onchange={handleInputChange}>
+                </lightning-combobox>
+
+            </div>
+
+            <!-- Modality -->
+
+            <div class="slds-m-top_small">
+
+                <lightning-combobox
+                    name="modality"
+                    label="Modality"
+                    value={modality}
+                    options={modalityOptions}
+                    onchange={handleInputChange}>
+                </lightning-combobox>
+
+            </div>
+
+            <!-- Generate -->
+
+            <div class="slds-m-top_large">
 
                 <lightning-button
                     label="Generate Target Price"
                     variant="brand"
-                    onclick={handleClick}
+                    onclick={handleGenerate}
                     disabled={isLoading}>
                 </lightning-button>
 
             </div>
 
+            <!-- Loading -->
+
             <template if:true={isLoading}>
+
                 <div class="slds-m-top_medium">
-                    Generating price...
+
+                    <lightning-spinner
+                        alternative-text="Generating target price"
+                        size="small">
+                    </lightning-spinner>
+
+                    <p>
+                        Generating target price...
+                    </p>
+
                 </div>
+
             </template>
+
+            <!-- Result -->
 
             <template if:true={targetPrice}>
-                <div class="slds-m-top_medium">
 
-                    <p class="slds-text-heading_medium">
-                        Target Price: ${targetPrice}
-                    </p>
+                <div class="slds-m-top_large slds-box">
 
-                    <p class="slds-m-top_small">
-                        {message}
-                    </p>
+                    <h2 class="slds-text-heading_medium">
+                        Pricing Result
+                    </h2>
+
+                    <div class="slds-m-top_medium">
+
+                        <p>
+                            <strong>Account:</strong>
+                            {accountName}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>Product:</strong>
+                            {productCode}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>Quantity:</strong>
+                            {quantity}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>Region:</strong>
+                            {region}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>Modality:</strong>
+                            {modality}
+                        </p>
+
+                        <hr class="slds-m-vertical_medium"/>
+
+                        <p class="slds-text-heading_large">
+                            Target Price: ${targetPrice}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>Confidence:</strong>
+                            {confidence}%
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            <strong>Status:</strong>
+                            {status}
+                        </p>
+
+                        <p class="slds-m-top_small">
+                            {message}
+                        </p>
+
+                    </div>
 
                 </div>
+
             </template>
 
-            <template if:false={targetPrice}>
-                <template if:true={message}>
-                    <p class="slds-m-top_medium">
+            <!-- Error -->
+
+            <template if:true={message}>
+
+                <template if:false={targetPrice}>
+
+                    <div class="slds-m-top_medium slds-text-color_error">
                         {message}
-                    </p>
+                    </div>
+
                 </template>
+
             </template>
 
         </div>
 
     </lightning-card>
+
 </template>
