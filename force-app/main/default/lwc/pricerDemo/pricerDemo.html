@@ -1,0 +1,58 @@
+<template>
+    <lightning-card
+        title="Target Pricing System"
+        icon-name="standard:product">
+
+        <div class="slds-p-around_medium">
+
+            <h2 class="slds-text-heading_medium">
+                Target Pricing
+            </h2>
+
+            <p class="slds-m-top_small">
+                Generate a target price using Salesforce Apex.
+            </p>
+
+            <div class="slds-m-top_medium">
+
+                <lightning-button
+                    label="Generate Target Price"
+                    variant="brand"
+                    onclick={handleClick}
+                    disabled={isLoading}>
+                </lightning-button>
+
+            </div>
+
+            <template if:true={isLoading}>
+                <div class="slds-m-top_medium">
+                    Generating price...
+                </div>
+            </template>
+
+            <template if:true={targetPrice}>
+                <div class="slds-m-top_medium">
+
+                    <p class="slds-text-heading_medium">
+                        Target Price: ${targetPrice}
+                    </p>
+
+                    <p class="slds-m-top_small">
+                        {message}
+                    </p>
+
+                </div>
+            </template>
+
+            <template if:false={targetPrice}>
+                <template if:true={message}>
+                    <p class="slds-m-top_medium">
+                        {message}
+                    </p>
+                </template>
+            </template>
+
+        </div>
+
+    </lightning-card>
+</template>
